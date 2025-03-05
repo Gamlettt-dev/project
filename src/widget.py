@@ -1,3 +1,6 @@
+from datetime import datetime
+
+
 def mask_account_card(info: str) -> str:
     """
     Маскирует номер карты или счета.
@@ -20,8 +23,6 @@ def mask_account_card(info: str) -> str:
 
     return f"{account_type} {masked_number}"
 
-
-from datetime import datetime
 
 def get_date(date_str: str) -> str:
     """
