@@ -14,7 +14,7 @@ def mask_account_card(info: str) -> str:
         return info
 
     account_type = info[:last_space_index]  # Тип карты или "Счет"
-    number = info[last_space_index + 1:]  # Номер карты или счета
+    number = info[last_space_index + 1 :]  # Номер карты или счета
 
     if account_type.lower() == "счет":
         masked_number = "**" + number[-4:]
