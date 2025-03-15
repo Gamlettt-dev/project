@@ -1,7 +1,8 @@
-from typing import List, Dict, Any
+from typing import Dict, List, Union
 
 
-def filter_by_state(data_state: List[Dict[str, Any]], state: str = "EXECUTED") -> List[Dict[str, Any]]:
+def filter_by_state(data_state: List[Dict[str, Union[int, str, bool]]],
+                    state: str = "EXECUTED") -> List[Dict[str, Union[int, str, bool]]]:
     """
     Фильтрует список словарей по значению ключа 'state'.
 
@@ -30,7 +31,8 @@ result_canceled = filter_by_state(data_state, state="CANCELED")
 print(result_canceled)
 
 
-def sort_by_date(data: List[Dict[str, Any]], reverse: bool = True) -> List[Dict[str, Any]]:
+def sort_by_date(data: List[Dict[str, Union[int, str, bool]]],
+                 reverse: bool = True) -> List[Dict[str, Union[int, str, bool]]]:
     """
     Сортирует список словарей по ключу 'date'.
 
