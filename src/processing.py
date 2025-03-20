@@ -1,8 +1,9 @@
 from typing import Dict, List, Union
 
 
-def filter_by_state(data_state: List[Dict[str, Union[int, str, bool]]],
-                    state: str = "EXECUTED") -> List[Dict[str, Union[int, str, bool]]]:
+def filter_by_state(
+    data_state: List[Dict[str, Union[int, str, bool]]], state: str = "EXECUTED"
+) -> List[Dict[str, Union[int, str, bool]]]:
     """
     Фильтрует список словарей по значению ключа 'state'.
 
@@ -14,7 +15,7 @@ def filter_by_state(data_state: List[Dict[str, Union[int, str, bool]]],
     return filtered_data
 
 
-data_state = [
+data_state: List[Dict[str, Union[int, str, bool]]] = [
     {"id": 41428829, "state": "EXECUTED", "date": "2019-07-03T18:35:29.512364"},
     {"id": 939719570, "state": "EXECUTED", "date": "2018-06-30T02:08:58.425572"},
     {"id": 594226727, "state": "CANCELED", "date": "2018-09-12T21:27:25.241689"},
@@ -31,8 +32,9 @@ result_canceled = filter_by_state(data_state, state="CANCELED")
 print(result_canceled)
 
 
-def sort_by_date(data: List[Dict[str, Union[int, str, bool]]],
-                 reverse: bool = True) -> List[Dict[str, Union[int, str, bool]]]:
+def sort_by_date(
+    data: List[Dict[str, Union[int, str, bool]]], reverse: bool = True
+) -> List[Dict[str, Union[int, str, bool]]]:
     """
     Сортирует список словарей по ключу 'date'.
 
@@ -41,7 +43,7 @@ def sort_by_date(data: List[Dict[str, Union[int, str, bool]]],
     return sorted_data
 
 
-data = [
+data: List[Dict[str, Union[int, str, bool]]] = [
     {"id": 41428829, "state": "EXECUTED", "date": "2019-07-03T18:35:29.512364"},
     {"id": 939719570, "state": "EXECUTED", "date": "2018-06-30T02:08:58.425572"},
     {"id": 594226727, "state": "CANCELED", "date": "2018-09-12T21:27:25.241689"},
