@@ -111,9 +111,6 @@ def test_generator_behavior(description_transactions):
         next(gen)
 
 
-import pytest
-
-
 # Фикстура для генератора (опционально)
 @pytest.fixture
 def card_gen():
