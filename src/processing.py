@@ -41,20 +41,3 @@ def sort_by_date(
     """
     sorted_data = sorted(data, key=lambda item: item["date"], reverse=reverse)
     return sorted_data
-
-
-data: List[Dict[str, Union[int, str, bool]]] = [
-    {"id": 41428829, "state": "EXECUTED", "date": "2019-07-03T18:35:29.512364"},
-    {"id": 939719570, "state": "EXECUTED", "date": "2018-06-30T02:08:58.425572"},
-    {"id": 594226727, "state": "CANCELED", "date": "2018-09-12T21:27:25.241689"},
-    {"id": 615064591, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
-]
-
-# Сортировка по убыванию (по умолчанию)
-result_descending = sort_by_date(data)
-print(result_descending)
-
-
-# Сортировка по возрастанию
-result_ascending = sort_by_date(data, reverse=False)
-print(result_ascending)
