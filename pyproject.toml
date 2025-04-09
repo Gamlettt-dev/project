@@ -44,8 +44,6 @@ ensure_newline_before_comments = true
 [tool.mypy]
 disallow_untyped_defs = true
 warn_return_any = true
-exclude = [
-    "venv",
-    "^tests/"
-]
+exclude = '^(venv|tests)(/|$)'
+
 
