@@ -1,4 +1,7 @@
-def filter_by_currency(transactions, currency_code):
+from typing import Dict, List, Iterator, Iterable
+
+
+def filter_by_currency(transactions: List[Dict], currency_code: str) -> Iterator[Dict]:
     """
     Принимает на вход список словарей, представляющих транзакции и возвращает
      итератор, который поочередно выдает транзакции, где валюта операции
@@ -48,7 +51,7 @@ if __name__ == "__main__":
         print(next(usd_transactions))
 
 
-def transaction_descriptions(data_transaction):
+def transaction_descriptions(data_transaction: List[Dict]) -> Iterator[str]:
     """
     Принимает список словарей с транзакциями и возвращает
     описание каждой операции по очереди.
@@ -70,7 +73,7 @@ for _ in range(5):
     print(next(descriptions))
 
 
-def card_number_generator(start, end):
+def card_number_generator(start: int, end: int) -> Iterator[str]:
     """
     Генератор который выдает номера банковских карт в формате
     XXXX XXXX XXXX XXXX, где X — цифра номера карты.

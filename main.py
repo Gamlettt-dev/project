@@ -1,4 +1,6 @@
+from src.external_api import convert_transaction_to_rub
 from src.masks import get_mask_account, get_mask_card_number
+from src.utils import load_transactions_from_json
 from src.widget import get_date, mask_account_card
 
 # Пример использования функции
@@ -23,3 +25,15 @@ if __name__ == "__main__":
 
     for card in card_nums:
         print(mask_account_card(card))
+
+# Проверка загрузки
+txs = load_transactions_from_json("data/operations.json")
+print(txs)
+
+for i, tx in enumerate(txs, 1):
+    print(f"Тест #{i}: {tx}")
+    try:
+        result = convert_transaction_to_rub(tx)
+        print(f"Результат: {result:.2f} RUB\n")
+    except Exception as e:
+        print(f"Ошибка: {e}\n")
