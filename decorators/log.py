@@ -38,17 +38,17 @@ def log(filename=None):
     return decorator
 
 
-# @log()
-# def divide(a, b):
-#     return a / b
-#
-# divide(10, 2)
-#divide(10, 0)
+@log()
+def divide(a, b):
+    return a / b
+
+
+divide(10, 2)
+divide(10, 0)
 
 
 #@log(filename="C:/Users/proje/mylog.txt")
 #def divide(a, b):
 #    return a / b
-#
 #divide(10, 2)
 #divide(10, 0)
