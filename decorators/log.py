@@ -44,7 +44,8 @@ def divide(a, b):
 
 
 divide(10, 2)
-divide(10, 0)
+if __name__ == "__main__":
+    divide(10, 0)
 
 
 #@log(filename="C:/Users/proje/mylog.txt")
