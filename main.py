@@ -1,13 +1,13 @@
 from typing import Dict, List, Union
 
+from config import TRANSACTIONS_CSV, TRANSACTIONS_EXCEL
 from src.external_api import convert_transaction_to_rub
+from src.file_reader import read_csv_transactions, read_excel_transactions
 from src.generators import card_number_generator, filter_by_currency, transaction_descriptions
 from src.masks import get_mask_account, get_mask_card_number
 from src.processing import filter_by_state, sort_by_date
 from src.utils import load_transactions_from_json
 from src.widget import get_date, mask_account_card
-from src.file_reader import read_csv_transactions, read_excel_transactions
-from config import TRANSACTIONS_CSV, TRANSACTIONS_EXCEL
 
 # Пример использования функции
 if __name__ == "__main__":
@@ -130,7 +130,6 @@ for _ in range(5):
 
 for card_number in card_number_generator(1, 5):
     print(card_number)
-
 
     # Чтение CSV
     try:

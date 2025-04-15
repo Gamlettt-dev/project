@@ -1,5 +1,5 @@
-import pytest
-from unittest.mock import patch, mock_open, MagicMock
+from unittest.mock import mock_open, patch
+
 import pandas as pd
 
 from src.file_reader import read_csv_transactions, read_excel_transactions

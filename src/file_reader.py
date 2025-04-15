@@ -1,7 +1,8 @@
-import pandas as pd
-import os
-from typing import List, Dict, Union, Optional
 import logging
+import os
+from typing import Dict, List, Union
+
+import pandas as pd
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
@@ -65,5 +66,3 @@ def read_excel_transactions(file_path: str) -> List[Dict]:
     except Exception as e:
         logger.error(f"Ошибка при чтении Excel: {e}")
         raise ValueError(f"Ошибка при чтении Excel файла: {e}")
-
-

@@ -20,12 +20,7 @@ pip install -r requirements.txt
 2. В модуле processing.py описана работа функции с фильтрацией и хранением данных. 
 3. В модуле main.py можно протестировать функции и их работоспособность.
 4. В модуле src.py добавился файл generators.py 
-5. Для проверки функций 
-filter_by_currency
- и 
-transaction_descriptions
-:
-
+5. Для проверки функций filter_by_currency и transaction_descriptions:
 transactions = (
     [
         {
@@ -105,6 +100,7 @@ transactions = (
         }
     ]
 )
+6. В проект были добавлены функции для чтения финансовых транзакций из файлов форматов CSV и Excel.
 
 ## Тестирование:
 1. В директории tests созданы модули для тестирования функций.
