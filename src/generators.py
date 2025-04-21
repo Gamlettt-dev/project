@@ -42,4 +42,4 @@ def card_number_generator(start: int, end: int) -> Iterator[str]:
 
 
 for card_number in card_number_generator(1, 5):
-    print(card_number)
+    pass
