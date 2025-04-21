@@ -1,7 +1,7 @@
 from typing import Dict, List, Union
-
+from pprint import pprint
 # Конфигурации и пути к данным
-from config import TRANSACTIONS_CSV, TRANSACTIONS_EXCEL
+from config import TRANSACTIONS_CSV, TRANSACTIONS_EXCEL, TRANSACTIONS_JSON
 
 # Внешние API
 from src.external_api import convert_transaction_to_rub
@@ -19,123 +19,143 @@ from src.masks import get_mask_account, get_mask_card_number
 from src.processing import filter_by_state, sort_by_date
 from src.utils import load_transactions_from_json
 from src.widget import get_date, mask_account_card
+from src.transactions_utils import finder_inf
 
-# Точка входа
+def main():
+    print("Привет! Добро пожаловать в программу работы c банковскими транзакциями.")
+    print("""
+    Выберите необходимый пункт меню:
+    1. Получить информацию о транзакциях из JSON-файла
+    2. Получить информацию о транзакциях из CSV-файла
+    3. Получить информацию о транзакциях из XLSX-файла
+    """)
+
+    while True:
+        file_type = user_input = str(input().lower().strip())
+        if user_input == "1":
+            print("Вы выбрали JSON-файл")
+            break
+        elif user_input == "2":
+            print("Вы выбрали CSV-файл")
+            break
+        elif user_input == "3":
+            print("Вы выбрали XLSX-файл")
+            break
+        else:
+            print("Введите корректное число.")
+
+    while True:
+        print("Введите статус, по которому необходимо выполнить фильтрацию."
+              "Доступные для фильтровки статусы: EXECUTED, CANCELED, PENDING")
+
+
+        state = input().lower().strip()
+
+        statuses = ["EXECUTED", "CANCELED", "PENDING"]
+
+        if state.upper() in statuses:
+            break
+        else:
+            print(f'Статус операции недоступен {state}')
+
+    while True:
+        print("Отсортировать операции по дате? Да/Нет")
+
+        sorted_data = input().lower().strip()
+
+        if sorted_data in ['да','нет']:
+            break
+
+    while True:
+        print("""Отсортировать -
+            1: по возрастанию
+            2: по убыванию?
+            """)
+
+        sorted_by_data = input().lower().strip()
+
+        if sorted_by_data in ['1','2']:
+            break
+
+    while True:
+        print("Выводить только рублевые транзакции? Да/Нет")
+
+        currency_rub = input().lower().strip()
+
+        if currency_rub in ['да', 'нет']:
+            break
+
+    while True:
+        print("Отфильтровать список транзакций по определенному слову в описании? Да/Нет")
+
+        word_sort = input().lower().strip()
+
+        if word_sort in 'нет':
+            break
+        elif word_sort in 'да':
+            print("Напишите слово для фильтрации:")
+
+            word = input().lower().strip()
+
+            break
+
+    while True:
+        if file_type == '1':
+            file = load_transactions_from_json(TRANSACTIONS_JSON)
+            break
+        elif file_type == '2':
+            file = read_csv_transactions(TRANSACTIONS_CSV)
+            break
+        elif file_type == '3':
+            file = read_excel_transactions(TRANSACTIONS_EXCEL)
+            break
+        else:
+            print('Введите число от 1-3')
+
+    transactions = filter_by_state(file, state)
+    # Сортировка по дате
+    if sorted_data == "да":
+        revers_order = sorted_data == "по убыванию"
+        transactions = sort_by_date(transactions, reverse=revers_order)
+
+    # Фильтрация по валюте
+    if filter_by_state == "да":
+        transactions = list(filter_by_currency(transactions, "RUB"))
+    else:
+        user_currency = (input("Введите слово для фильтрации валюты: USD, EUR: ")).upper().strip()
+        transactions = list(filter_by_currency(transactions, user_currency))
+
+    # Фильтрация по описанию
+    if word_sort == "да":
+        search_word = (input("Введите ключевое слово для поиска: ")).lower().strip()
+        transactions = finder_inf(transactions, search_word)
+
+    print("Распечатываю итоговый список транзакций...")
+    print(f"Всего банковских операций в выборке {len(transactions)}")
+
+    for transaction in transactions:
+        # Безопасное извлечение данных с проверкой ключей
+        date = get_date(transaction.get("date", "Дата неизвестна"))
+        description = transaction.get("description", "Описание отсутствует")
+        from_account = mask_account_card(transaction.get("from", ""))  # Маскируем "откуда"
+        to_account = mask_account_card(transaction.get("to", ""))  # Маскируем "куда"
+
+        # Обработка вложенной структуры operationAmount
+        operation_amount = transaction.get("operationAmount", {})
+        amount = operation_amount.get("amount", "Сумма не указана")
+        currency = operation_amount.get("currency", {})
+        currency_code = currency.get("code", "Валюта не указана")
+
+        # Форматированный вывод
+        print(
+            f"""
+Дата: {date} {description}
+{from_account} -> {to_account}
+Сумма: {amount} {currency_code}
+    """
+        )
+
+
 if __name__ == "__main__":
-    print("Маскирование номера карты и счёта")
-    card_number = 1234567890123456
-    account_number = 1234567890
-    print(f"Masked card: {get_mask_card_number(str(card_number))} (Функция из модуля `src.masks`)")
-    print(f"Masked account: {get_mask_account(str(account_number))} (Функция из модуля `src.masks`)\n")
+    main()
 
-    print("Форматирование даты")
-    print(get_date("2024-03-11T02:26:18.671407"), "(Функция из модуля `src.widget`)\n")
-
-    print("Маскирование списка карт и счетов")
-    card_nums = [
-        "Visa Platinum 7000792289606361",
-        "Счет 73654108430135874305",
-        "Maestro 1596837868705199",
-        "Счет 64686473678894779589",
-    ]
-    for card in card_nums:
-        print(mask_account_card(card), "(Функция из модуля `src.widget`)")
-    print()
-
-    print("Загрузка транзакций из JSON")
-    txs = load_transactions_from_json("data/operations.json")
-    for i, tx in enumerate(txs, 1):
-        print(f"Тест #{i}: {tx}")
-        try:
-            result = convert_transaction_to_rub(tx)
-            print(f"Результат: {result:.2f} RUB (Функция из модуля `src.external_api`)\n")
-        except Exception as e:
-            print(f"Ошибка: {e}\n")
-
-    print("Сортировка транзакций по дате")
-    data: List[Dict[str, Union[int, str, bool]]] = [
-        {"id": 41428829, "state": "EXECUTED", "date": "2019-07-03T18:35:29.512364"},
-        {"id": 939719570, "state": "EXECUTED", "date": "2018-06-30T02:08:58.425572"},
-        {"id": 594226727, "state": "CANCELED", "date": "2018-09-12T21:27:25.241689"},
-        {"id": 615064591, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
-    ]
-    print("По убыванию:", sort_by_date(data), "(Функция из модуля `src.processing`)")
-    print("По возрастанию:", sort_by_date(data, reverse=False), "(Функция из модуля `src.processing`)", "\n")
-
-    print("Фильтрация по статусу транзакции")
-    print("EXECUTED:", filter_by_state(data, state="EXECUTED"), "(Функция из модуля `src.processing`)")
-    print("CANCELED:", filter_by_state(data, state="CANCELED"), "(Функция из модуля `src.processing`)", "\n")
-
-    print("Фильтрация по валюте (USD)")
-    transactions = [
-        {
-            "id": 939719570,
-            "state": "EXECUTED",
-            "date": "2018-06-30T02:08:58.425572",
-            "operationAmount": {"amount": "9824.07", "currency": {"name": "USD", "code": "USD"}},
-            "description": "Перевод организации",
-            "from": "Счет 75106830613657916952",
-            "to": "Счет 11776614605963066702",
-        },
-        {
-            "id": 142264268,
-            "state": "EXECUTED",
-            "date": "2019-04-04T23:20:05.206878",
-            "operationAmount": {"amount": "79114.93", "currency": {"name": "USD", "code": "USD"}},
-            "description": "Перевод со счета на счет",
-            "from": "Счет 19708645243227258542",
-            "to": "Счет 75651667383060284188",
-        },
-        {
-            "id": 873106923,
-            "state": "EXECUTED",
-            "date": "2019-03-23T01:09:46.296404",
-            "operationAmount": {"amount": "43318.34", "currency": {"name": "RUB", "code": "RUB"}},
-            "description": "Перевод со счета на счет",
-            "from": "Счет 44812258784861134719",
-            "to": "Счет 74489636417521191160",
-        },
-    ]
-    usd_transactions = filter_by_currency(transactions, "USD")
-    for _ in range(2):
-        print(next(usd_transactions), "(Функция из модуля `src.generators`)")
-    print()
-
-    print("Частота описаний операций")
-    data_transaction = [
-        {"description": "Перевод организации"},
-        {"description": "Перевод со счета на счет"},
-        {"description": "Перевод со счета на счет"},
-        {"description": "Перевод с карты на карту"},
-        {"description": "Перевод организации"},
-    ]
-    descriptions = transaction_descriptions(data_transaction)
-    for _ in range(5):
-        print(next(descriptions), "(Функция из модуля `src.generators`)")
-    print()
-
-    print("Генерация номеров карт")
-    for card_number in card_number_generator(1, 5):
-        print(card_number, "(Функция из модуля `src.generators`)")
-    print()
-
-    print("Чтение данных из CSV")
-    try:
-        csv_data = read_csv_transactions(TRANSACTIONS_CSV)
-        print(f"Всего записей: {len(csv_data)}")
-        print("Первые 3 записи:")
-        for i, item in enumerate(csv_data[:3], 1):
-            print(f"{i}. {item} (Функция из модуля `src.file_reader`)")
-    except Exception as e:
-        print(f"Ошибка при чтении CSV: {e}")
-    print()
-
-    print("Чтение данных из Excel")
-    try:
-        excel_data = read_excel_transactions(TRANSACTIONS_EXCEL)
-        print(f"Всего записей: {len(excel_data)}")
-        print("Первые 3 записи:")
-        for i, item in enumerate(excel_data[:3], 1):
-            print(f"{i}. {item} (Функция из модуля `src.file_reader`)")
-    except Exception as e:
-        print(f"Ошибка при чтении Excel: {e}")
